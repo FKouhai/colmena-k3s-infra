@@ -7,7 +7,7 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
+    ./master-hardware-configuration.nix
     ../modules/common.nix
     ../modules/hardware-arm.nix
     ../modules/k3s-server.nix

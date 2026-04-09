@@ -7,7 +7,7 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
+    ./worker04-hardware-configuration.nix
     ../modules/common.nix
     ../modules/hardware-x86.nix
     ../modules/k3s-agent.nix
