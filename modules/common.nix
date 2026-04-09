@@ -11,7 +11,6 @@
     "flakes"
   ];
 
-  networking.wireless.enable = false;
   networking.networkmanager.enable = true;
   networking.defaultGateway = "192.168.0.1";
   networking.nameservers = [ "192.168.0.2" ];
