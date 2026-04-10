@@ -13,7 +13,7 @@
     token = "REDACTED";
     clusterInit = true;
     extraFlags = toString [
-      "--flannel-backend=none --disable traefik --write-kubeconfig-mode=644"
+      "--flannel-backend=none --disable traefik --disable-kube-proxy --disable-network-policy --write-kubeconfig-mode=644"
     ];
   };
 
