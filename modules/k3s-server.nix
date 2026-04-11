@@ -34,7 +34,7 @@
       "--write-kubeconfig-mode=644"
       # etcd snapshots → Garage S3 on unraid (192.168.0.33)
       "--etcd-s3"
-      "--etcd-s3-endpoint=192.168.0.33:3900"
+      "--etcd-s3-endpoint=192.168.0.33:9000"
       "--etcd-s3-bucket=etcd-snapshots"
       "--etcd-s3-bucket-lookup-type=path"
       "--etcd-s3-region=garage"
