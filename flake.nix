@@ -16,6 +16,7 @@
           ip,
           hostConfig,
           hardwareConfig,
+          tags ? [ ],
         }:
         {
           imports = [
@@ -26,6 +27,7 @@
           deployment = {
             targetHost = ip;
             targetUser = "nixos";
+            inherit tags;
           };
         };
 
@@ -44,6 +46,7 @@
           ip = "192.168.0.106";
           hostConfig = ./hosts/epsylon.nix;
           hardwareConfig = ./hosts/epsylon-hardware-configuration.nix;
+          tags = [ "masters" ];
         };
 
         master = mkNode {
@@ -51,6 +54,7 @@
           ip = "192.168.0.101";
           hostConfig = ./hosts/master.nix;
           hardwareConfig = ./hosts/master-hardware-configuration.nix;
+          tags = [ "masters" ];
         };
 
         worker01 = mkNode {
@@ -58,6 +62,7 @@
           ip = "192.168.0.102";
           hostConfig = ./hosts/worker01.nix;
           hardwareConfig = ./hosts/worker01-hardware-configuration.nix;
+          tags = [ "workers" ];
         };
 
         worker02 = mkNode {
@@ -65,6 +70,7 @@
           ip = "192.168.0.103";
           hostConfig = ./hosts/worker02.nix;
           hardwareConfig = ./hosts/worker02-hardware-configuration.nix;
+          tags = [ "workers" ];
         };
 
         worker03 = mkNode {
@@ -72,6 +78,7 @@
           ip = "192.168.0.104";
           hostConfig = ./hosts/worker03.nix;
           hardwareConfig = ./hosts/worker03-hardware-configuration.nix;
+          tags = [ "workers" ];
         };
 
         worker04 = mkNode {
@@ -79,6 +86,7 @@
           ip = "192.168.0.105";
           hostConfig = ./hosts/worker04.nix;
           hardwareConfig = ./hosts/worker04-hardware-configuration.nix;
+          tags = [ "workers" ];
         };
       };
 
