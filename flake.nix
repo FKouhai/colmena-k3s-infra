@@ -3,10 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { self, nixpkgs }:
+    { self, nixpkgs, agenix }:
     let
       lib = nixpkgs.lib;
 
@@ -42,12 +46,18 @@
           specialArgs = { inherit lib; };
         };
 
-        epsylon = mkNode {
-          hostname = "epsylon";
-          ip = "192.168.0.106";
-          hostConfig = ./hosts/epsylon.nix;
-          hardwareConfig = ./hosts/epsylon-hardware-configuration.nix;
-          tags = [ "masters" ];
+        epsylon = {
+          imports = [
+            ./hosts/epsylon.nix
+            ./hosts/epsylon-hardware-configuration.nix
+            agenix.nixosModules.default
+          ];
+          deployment = {
+            targetHost = "192.168.0.106";
+            targetUser = "nixos";
+            tags = [ "masters" ];
+            buildOnTarget = true;
+          };
         };
 
         master = mkNode {
