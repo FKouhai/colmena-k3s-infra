@@ -55,7 +55,7 @@
           ip = "192.168.0.101";
           hostConfig = ./hosts/master.nix;
           hardwareConfig = ./hosts/master-hardware-configuration.nix;
-          tags = [ "masters" ];
+          tags = [ "workers" ];
           buildOnTarget = true;
         };
 

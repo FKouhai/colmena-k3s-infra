@@ -10,10 +10,10 @@
     ./master-hardware-configuration.nix
     ../modules/common.nix
     ../modules/hardware-arm.nix
-    ../modules/k3s-server.nix
+    ../modules/k3s-agent.nix
   ];
 
-  networking.hostName = "master";
+  networking.hostName = "worker05";
   networking.interfaces.end0.useDHCP = false;
   networking.interfaces.end0.ipv4.addresses = [
     {
