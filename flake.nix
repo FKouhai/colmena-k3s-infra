@@ -17,6 +17,7 @@
           hostConfig,
           hardwareConfig,
           tags ? [ ],
+          buildOnTarget ? false,
         }:
         {
           imports = [
@@ -27,7 +28,7 @@
           deployment = {
             targetHost = ip;
             targetUser = "nixos";
-            inherit tags;
+            inherit tags buildOnTarget;
           };
         };
 
@@ -55,6 +56,7 @@
           hostConfig = ./hosts/master.nix;
           hardwareConfig = ./hosts/master-hardware-configuration.nix;
           tags = [ "masters" ];
+          buildOnTarget = true;
         };
 
         worker01 = mkNode {
@@ -63,6 +65,7 @@
           hostConfig = ./hosts/worker01.nix;
           hardwareConfig = ./hosts/worker01-hardware-configuration.nix;
           tags = [ "workers" ];
+          buildOnTarget = true;
         };
 
         worker02 = mkNode {
@@ -71,6 +74,7 @@
           hostConfig = ./hosts/worker02.nix;
           hardwareConfig = ./hosts/worker02-hardware-configuration.nix;
           tags = [ "workers" ];
+          buildOnTarget = true;
         };
 
         worker03 = mkNode {
