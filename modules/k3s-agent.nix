@@ -11,6 +11,6 @@
     enable = true;
     role = "agent";
     token = "REDACTED";
-    serverAddr = "https://192.168.0.101:6443";
+    serverAddr = "https://192.168.0.106:6443";
   };
 }

@@ -26,7 +26,6 @@
           deployment = {
             targetHost = ip;
             targetUser = "nixos";
-            buildOnTarget = true;
           };
         };
 
@@ -38,6 +37,13 @@
             system = "x86_64-linux";
           };
           specialArgs = { inherit lib; };
+        };
+
+        epsylon = mkNode {
+          hostname = "epsylon";
+          ip = "192.168.0.106";
+          hostConfig = ./hosts/epsylon.nix;
+          hardwareConfig = ./hosts/epsylon-hardware-configuration.nix;
         };
 
         master = mkNode {
