@@ -27,7 +27,7 @@
       etcd-s3-endpoint: "192.168.0.33:9000"
       etcd-s3-bucket: "etcd-snapshots"
       etcd-s3-bucket-lookup-type: "path"
-      etcd-s3-region: "garage"
+      etcd-s3-region: "us-east-1"
       etcd-s3-insecure: true
       etcd-s3-retention: 5
       etcd-snapshot-retention: 5
