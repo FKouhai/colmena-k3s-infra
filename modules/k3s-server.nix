@@ -19,6 +19,22 @@
     mode = "0400";
   };
 
+  # S3 snapshot settings as a config drop-in so both k3s server and
+  # k3s etcd-snapshot subcommand can read them (credentials come from s3-creds.yaml via agenix)
+  environment.etc."rancher/k3s/config.yaml.d/etcd-s3.yaml" = {
+    text = ''
+      etcd-s3: true
+      etcd-s3-endpoint: "192.168.0.33:9000"
+      etcd-s3-bucket: "etcd-snapshots"
+      etcd-s3-bucket-lookup-type: "path"
+      etcd-s3-region: "garage"
+      etcd-s3-insecure: true
+      etcd-s3-retention: 5
+      etcd-snapshot-retention: 5
+    '';
+    mode = "0400";
+  };
+
   services.k3s = {
     package = pkgs.k3s;
     enable = true;
@@ -32,16 +48,7 @@
       "--disable-kube-proxy"
       "--disable-network-policy"
       "--write-kubeconfig-mode=644"
-      # etcd snapshots → Garage S3 on unraid (192.168.0.33)
-      "--etcd-s3"
-      "--etcd-s3-endpoint=192.168.0.33:9000"
-      "--etcd-s3-bucket=etcd-snapshots"
-      "--etcd-s3-bucket-lookup-type=path"
-      "--etcd-s3-region=garage"
-      "--etcd-s3-insecure"
-      "--etcd-s3-retention=2"
       "--etcd-snapshot-schedule-cron=0 */12 * * *"
-      "--etcd-snapshot-retention=2"
     ];
   };
 
