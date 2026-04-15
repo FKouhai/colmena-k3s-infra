@@ -18,6 +18,8 @@
     owner = "root";
     mode = "0400";
   };
+
+  # K3S token used for nodes to join the cluster
   age.secrets.cluster-token = {
     file = ../secrets/cluster-token.age;
     path = "/etc/rancher/k3s/token";
@@ -37,6 +39,7 @@
       etcd-s3-insecure: true
       etcd-s3-retention: 5
       etcd-snapshot-retention: 5
+      etcd-snapshot-schedule-cron: "0 */12 * * *"
     '';
     mode = "0400";
   };
@@ -54,7 +57,6 @@
       "--disable-kube-proxy"
       "--disable-network-policy"
       "--write-kubeconfig-mode=644"
-      "--etcd-snapshot-schedule-cron=0 */12 * * *"
     ];
   };
 
