@@ -10,7 +10,11 @@
   };
 
   outputs =
-    { self, nixpkgs, agenix }:
+    {
+      self,
+      nixpkgs,
+      agenix,
+    }:
     let
       lib = nixpkgs.lib;
 
@@ -69,38 +73,60 @@
           buildOnTarget = true;
         };
 
-        worker01 = mkNode {
-          hostname = "worker01";
-          ip = "192.168.0.102";
-          hostConfig = ./hosts/worker01.nix;
-          hardwareConfig = ./hosts/worker01-hardware-configuration.nix;
-          tags = [ "workers" ];
-          buildOnTarget = true;
+        worker01 = {
+          imports = [
+            ./hosts/worker01.nix
+            ./hosts/worker01-hardware-configuration.nix
+            agenix.nixosModules.default
+          ];
+          deployment = {
+            targetHost = "192.168.0.102";
+            targetUser = "nixos";
+            tags = [ "workers" ];
+            buildOnTarget = true;
+          };
         };
 
-        worker02 = mkNode {
-          hostname = "worker02";
-          ip = "192.168.0.103";
-          hostConfig = ./hosts/worker02.nix;
-          hardwareConfig = ./hosts/worker02-hardware-configuration.nix;
-          tags = [ "workers" ];
-          buildOnTarget = true;
+        worker02 = {
+          imports = [
+            ./hosts/worker02.nix
+            ./hosts/worker02-hardware-configuration.nix
+            agenix.nixosModules.default
+          ];
+          deployment = {
+            targetHost = "192.168.0.103";
+            targetUser = "nixos";
+            tags = [ "workers" ];
+            buildOnTarget = true;
+          };
         };
 
-        worker03 = mkNode {
-          hostname = "worker03";
-          ip = "192.168.0.104";
-          hostConfig = ./hosts/worker03.nix;
-          hardwareConfig = ./hosts/worker03-hardware-configuration.nix;
-          tags = [ "workers" ];
+        worker03 = {
+          imports = [
+            ./hosts/worker03.nix
+            ./hosts/worker03-hardware-configuration.nix
+            agenix.nixosModules.default
+          ];
+          deployment = {
+            targetHost = "192.168.0.104";
+            targetUser = "nixos";
+            tags = [ "workers" ];
+            buildOnTarget = true;
+          };
         };
 
-        worker04 = mkNode {
-          hostname = "worker04";
-          ip = "192.168.0.105";
-          hostConfig = ./hosts/worker04.nix;
-          hardwareConfig = ./hosts/worker04-hardware-configuration.nix;
-          tags = [ "workers" ];
+        worker04 = {
+          imports = [
+            ./hosts/worker04.nix
+            ./hosts/worker04-hardware-configuration.nix
+            agenix.nixosModules.default
+          ];
+          deployment = {
+            targetHost = "192.168.0.105";
+            targetUser = "nixos";
+            tags = [ "workers" ];
+            buildOnTarget = true;
+          };
         };
       };
 

@@ -18,6 +18,12 @@
     owner = "root";
     mode = "0400";
   };
+  age.secrets.cluster-token = {
+    file = ../secrets/cluster-token.age;
+    path = "/etc/rancher/k3s/token";
+    owner = "root";
+    mode = "0400";
+  };
 
   # S3 snapshot settings as a config drop-in so both k3s server and
   # k3s etcd-snapshot subcommand can read them (credentials come from s3-creds.yaml via agenix)
@@ -39,7 +45,7 @@
     package = pkgs.k3s;
     enable = true;
     role = "server";
-    token = "REDACTED";
+    tokenFile = config.age.secrets.cluster-token.path;
     clusterInit = true;
     extraFlags = [
       "--flannel-backend=none"
