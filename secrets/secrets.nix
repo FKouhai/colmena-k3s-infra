@@ -4,6 +4,7 @@ let
   worker02 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGXozSZ5kELvFtgABUo01zW57a2Fwr77dAi21uffPFai root@nixos";
   worker03 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFBzNrWVUsFMfIDHWcHKpzPmWr6pGCuyPdLqf7o7mTk0 root@worker03";
   worker04 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEecocGFnzgG/u/ZR4avX1YC1m7XGYyo0uyILTWz23Ne root@worker04";
+  master = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ5PUBhb0OUgUsuEehNr3i+rblWBHtkkv3X0BXsDPXNn root@nixos";
   franky = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFyWsnvAIM23SRQCW4AIPKeNhVeCWtez/CV1hDegCunC";
 in
 {
@@ -14,6 +15,7 @@ in
   "cluster-token.age".publicKeys = [
     epsylon
     franky
+    master
     worker01
     worker02
     worker03

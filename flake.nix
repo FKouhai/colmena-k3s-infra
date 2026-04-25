@@ -31,6 +31,7 @@
           imports = [
             hostConfig
             hardwareConfig
+            agenix.nixosModules.default
           ];
 
           deployment = {
@@ -64,11 +65,11 @@
           };
         };
 
-        master = mkNode {
-          hostname = "master";
+        worker05 = mkNode {
+          hostname = "worker05";
           ip = "192.168.0.101";
-          hostConfig = ./hosts/master.nix;
-          hardwareConfig = ./hosts/master-hardware-configuration.nix;
+          hostConfig = ./hosts/worker05.nix;
+          hardwareConfig = ./hosts/worker05-hardware-configuration.nix;
           tags = [ "workers" ];
           buildOnTarget = true;
         };
