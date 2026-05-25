@@ -7,6 +7,14 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    microvm = {
+      url = "github:astro/microvm.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -14,6 +22,8 @@
       self,
       nixpkgs,
       agenix,
+      disko,
+      microvm,
     }:
     let
       lib = nixpkgs.lib;
@@ -129,6 +139,17 @@
             buildOnTarget = true;
           };
         };
+      };
+
+      nixosConfigurations.copernico = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit agenix; };
+        modules = [
+          microvm.nixosModules.host
+          disko.nixosModules.disko
+          ./hosts/copernico.nix
+          ./hosts/copernico-disk.nix
+        ];
       };
 
       devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
