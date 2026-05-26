@@ -40,7 +40,7 @@
           content = {
             type = "filesystem";
             format = "ext4";
-            mountpoint = "/var/lib/microvms";
+            mountpoint = "/var/lib/microvm";
           };
         };
       };

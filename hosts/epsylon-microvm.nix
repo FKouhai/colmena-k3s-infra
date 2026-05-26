@@ -9,6 +9,10 @@
 
   networking.hostName = "epsylon";
 
+  # Join the existing cluster on worker05 rather than bootstrapping a new one
+  services.k3s.clusterInit = lib.mkForce false;
+  services.k3s.serverAddr = "https://192.168.0.101:6443";
+
   # microvm.nix uses eth0 for the first virtio-net interface
   networking.interfaces.eth0.useDHCP = false;
   networking.interfaces.eth0.ipv4.addresses = [
