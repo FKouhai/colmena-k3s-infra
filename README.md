@@ -4,48 +4,56 @@ NixOS + [Colmena](https://github.com/zhaofengli/colmena) configuration for a mix
 
 ## Cluster overview
 
-| Node | IP | Arch | Role |
-|------|-----|------|------|
-| epsylon | 192.168.0.106 | x86_64 | k3s server (control plane) |
-| master | 192.168.0.101 | aarch64 | k3s agent |
-| worker01 | 192.168.0.102 | aarch64 | k3s agent |
-| worker02 | 192.168.0.103 | aarch64 | k3s agent |
-| worker03 | 192.168.0.104 | x86_64 | k3s agent |
-| worker04 | 192.168.0.105 | x86_64 | k3s agent |
+| Node | IP | Arch | Role | Host |
+|------|-----|------|------|------|
+| worker05 | 192.168.0.101 | aarch64 | k3s server (control plane, etcd) | bare-metal |
+| epsylon | 192.168.0.106 | x86_64 | k3s server (control plane, etcd) | microvm on copernico |
+| worker01 | 192.168.0.102 | aarch64 | k3s agent | bare-metal |
+| worker02 | 192.168.0.103 | aarch64 | k3s agent | bare-metal |
+| worker03 | 192.168.0.104 | x86_64 | k3s agent | microvm on copernico |
+| worker04 | 192.168.0.105 | x86_64 | k3s agent | microvm on copernico |
+| copernico | 192.168.0.19 | x86_64 | microvm host | bare-metal |
 
-x86_64 nodes run as QEMU VMs; aarch64 nodes are ARM single-board computers.
+aarch64 nodes are ARM single-board computers. x86_64 VMs (epsylon, worker03, worker04) run as QEMU microvms managed by [microvm.nix](https://github.com/astro/microvm.nix) on copernico.
 
 ## Stack
 
 - **NixOS** (nixos-unstable) — declarative OS configuration
 - **Colmena** — multi-host NixOS deployment tool
-- **k3s** — lightweight Kubernetes
+- **k3s** — lightweight Kubernetes (embedded etcd HA, two control planes)
 - **Cilium** — CNI (no kube-proxy, no Flannel)
 - **MetalLB** — bare-metal load balancer
 - **agenix** — age-encrypted secrets management
+- **microvm.nix** — NixOS-native QEMU microvm management
+- **disko** — declarative disk partitioning (copernico)
 - **Garage** — S3-compatible object storage for etcd snapshots (192.168.0.33)
-- **NFS** — persistent storage from NAS (192.168.0.33) on epsylon and worker04
+- **NFS** — persistent storage from NAS (192.168.0.33)
 
 ## Repository structure
 
 ```
 .
-├── flake.nix                  # Cluster definition and node declarations
-├── hosts/                     # Per-node NixOS configurations
-│   ├── epsylon.nix
-│   ├── master.nix
-│   ├── worker{01..04}.nix
+├── flake.nix                      # Cluster definition and node declarations
+├── hosts/
+│   ├── copernico.nix              # Bare-metal microvm host
+│   ├── copernico-disk.nix         # disko disk layout for copernico
+│   ├── epsylon-microvm.nix        # epsylon microvm guest config
+│   ├── worker03-microvm.nix       # worker03 microvm guest config
+│   ├── worker04-microvm.nix       # worker04 microvm guest config
+│   ├── worker05.nix               # Primary control plane (aarch64)
+│   ├── worker01.nix
+│   ├── worker02.nix
 │   └── *-hardware-configuration.nix
 ├── modules/
-│   ├── common.nix             # Shared config (networking, SSH, firewall, users)
-│   ├── k3s-server.nix         # Control plane config + etcd S3 snapshots
-│   ├── k3s-agent.nix          # Worker node config
-│   ├── hardware-x86.nix       # GRUB + QEMU guest tools
-│   └── hardware-arm.nix       # extlinux bootloader for ARM
+│   ├── common.nix                 # Shared config (networking, SSH, firewall, users)
+│   ├── k3s-server.nix             # Control plane config + etcd S3 snapshots
+│   ├── k3s-agent.nix              # Worker node config
+│   ├── hardware-x86.nix           # GRUB + QEMU guest tools
+│   └── hardware-arm.nix           # extlinux bootloader for ARM
 └── secrets/
-    ├── secrets.nix            # Age public key declarations
-    ├── cluster-token.age      # k3s cluster join token
-    └── k3s-s3-creds.yaml.age  # Garage S3 credentials for etcd snapshots
+    ├── secrets.nix                # Age public key declarations
+    ├── cluster-token.age          # k3s cluster join token
+    └── k3s-s3-creds.yaml.age      # Garage S3 credentials for etcd snapshots
 ```
 
 ## Usage
@@ -83,7 +91,13 @@ Secrets are managed with [agenix](https://github.com/ryantm/agenix). Each `.age`
 To re-key after adding a new node, update `secrets/secrets.nix` with the node's host public key, then:
 
 ```bash
-agenix -r
+cd secrets && agenix --rekey
+```
+
+For fresh microvms, run `ssh-keyscan` after first boot to get the new host key before rekeying:
+
+```bash
+ssh-keyscan -t ed25519 <ip>
 ```
 
 ## Networking
