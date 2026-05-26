@@ -61,12 +61,12 @@
             system = "x86_64-linux";
             overlays = [ nix-cachyos-kernel.overlays.default ];
           };
-          specialArgs = { inherit lib; };
+          specialArgs = { inherit lib agenix; };
         };
 
         epsylon = {
           imports = [
-            microvm.nixosModules.guest
+            microvm.nixosModules.microvm
             ./hosts/epsylon-microvm.nix
             agenix.nixosModules.default
           ];
