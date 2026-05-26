@@ -23,8 +23,12 @@
     fsType = "nfs";
   };
 
+  boot.kernelPackages = pkgs."linuxPackages-cachyos-latest-x86_64-v3";
+
   microvm = {
     hypervisor = "qemu";
+    mem = 6144;  # 6 GiB — matches previous Harvester allocation
+    vcpu = 4;
 
     interfaces = [
       {
@@ -34,12 +38,22 @@
       }
     ];
 
-    # 50 GiB root — etcd data lives here
+    # Share the host nix store read-only; microvm.nix overlays a writable
+    # tmpfs layer so the VM sees a normal /nix/store.
+    shares = [
+      {
+        tag = "ro-store";
+        source = "/nix/store";
+        mountPoint = "/nix/.ro-store";
+      }
+    ];
+    writableStoreOverlay = "/var/nix-rw-store";
+
     volumes = [
       {
-        image = "epsylon-root.img";
-        mountPoint = "/";
-        size = 51200;
+        image = "epsylon-var.img";
+        mountPoint = "/var";
+        size = 122880; # 120 GiB — etcd, k3s state, containerd cache, nix overlay
       }
     ];
   };

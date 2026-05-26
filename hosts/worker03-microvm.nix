@@ -17,8 +17,12 @@
     }
   ];
 
+  boot.kernelPackages = pkgs."linuxPackages-cachyos-latest-x86_64-v3";
+
   microvm = {
     hypervisor = "qemu";
+    mem = 8192;  # 8 GiB — matches previous Harvester allocation
+    vcpu = 4;
 
     interfaces = [
       {
@@ -28,11 +32,20 @@
       }
     ];
 
+    shares = [
+      {
+        tag = "ro-store";
+        source = "/nix/store";
+        mountPoint = "/nix/.ro-store";
+      }
+    ];
+    writableStoreOverlay = "/var/nix-rw-store";
+
     volumes = [
       {
-        image = "worker03-root.img";
-        mountPoint = "/";
-        size = 51200;
+        image = "worker03-var.img";
+        mountPoint = "/var";
+        size = 122880; # 120 GiB — containerd cache, k3s agent state, nix overlay
       }
     ];
   };

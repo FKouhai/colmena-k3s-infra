@@ -15,6 +15,7 @@
       url = "github:astro/microvm.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
   };
 
   outputs =
@@ -24,6 +25,7 @@
       agenix,
       disko,
       microvm,
+      nix-cachyos-kernel,
     }:
     let
       lib = nixpkgs.lib;
@@ -145,6 +147,7 @@
         system = "x86_64-linux";
         specialArgs = { inherit agenix; };
         modules = [
+          { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.default ]; }
           microvm.nixosModules.host
           disko.nixosModules.disko
           ./hosts/copernico.nix

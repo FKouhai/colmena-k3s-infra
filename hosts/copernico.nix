@@ -42,8 +42,13 @@
     };
   };
 
-  # Allow SSH from the nixos user (common.nix configures the key)
   services.openssh.settings.PermitRootLogin = lib.mkForce "no";
+
+  # common.nix already adds the ECDSA key; add the ed25519 key too so
+  # either key works on this headless host.
+  users.users.nixos.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFyWsnvAIM23SRQCW4AIPKeNhVeCWtez/CV1hDegCunC"
+  ];
 
   microvm.host.enable = true;
 
@@ -70,8 +75,30 @@
     };
   };
 
-  # Enable KVM for hardware-accelerated virtualisation
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.kernelPackages = pkgs."linuxPackages-cachyos-latest-x86_64-v3";
+  boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "usb_storage" "sd_mod" "sr_mod" ];
   boot.kernelModules = [ "kvm-amd" ];
+
+  hardware.enableRedistributableFirmware = true;
+  hardware.cpu.amd.updateMicrocode = true;
+
+  services.tailscale.enable = true;
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+
+  nix.settings = {
+    auto-optimise-store = true;
+    substituters = [ "https://attic.xuyh0120.win/lantian" ];
+    trusted-public-keys = [ "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" ];
+  };
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
+  };
 
   system.stateVersion = "24.11";
 }
