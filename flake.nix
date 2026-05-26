@@ -117,8 +117,8 @@
 
         worker03 = {
           imports = [
-            ./hosts/worker03.nix
-            ./hosts/worker03-hardware-configuration.nix
+            microvm.nixosModules.microvm
+            ./hosts/worker03-microvm.nix
             agenix.nixosModules.default
           ];
           deployment = {
@@ -131,8 +131,8 @@
 
         worker04 = {
           imports = [
-            ./hosts/worker04.nix
-            ./hosts/worker04-hardware-configuration.nix
+            microvm.nixosModules.microvm
+            ./hosts/worker04-microvm.nix
             agenix.nixosModules.default
           ];
           deployment = {
