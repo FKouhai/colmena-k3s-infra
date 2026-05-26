@@ -9,6 +9,14 @@
 
   networking.hostName = "worker04";
 
+  networking.networkmanager.enable = lib.mkForce false;
+  networking.useNetworkd = true;
+  networking.usePredictableInterfaceNames = false;
+  networking.defaultGateway = lib.mkForce {
+    address = "192.168.0.1";
+    interface = "eth0";
+  };
+
   networking.interfaces.eth0.useDHCP = false;
   networking.interfaces.eth0.ipv4.addresses = [
     {
@@ -22,7 +30,7 @@
     fsType = "nfs";
   };
 
-  boot.kernelPackages = pkgs."linuxPackages-cachyos-latest-x86_64-v3";
+  boot.kernelPackages = pkgs.cachyosKernels."linuxPackages-cachyos-latest-x86_64-v3";
 
   microvm = {
     hypervisor = "qemu";

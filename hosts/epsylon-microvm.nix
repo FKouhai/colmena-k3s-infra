@@ -9,6 +9,14 @@
 
   networking.hostName = "epsylon";
 
+  networking.networkmanager.enable = lib.mkForce false;
+  networking.useNetworkd = true;
+  networking.usePredictableInterfaceNames = false;
+  networking.defaultGateway = lib.mkForce {
+    address = "192.168.0.1";
+    interface = "eth0";
+  };
+
   # Join the existing cluster on worker05 rather than bootstrapping a new one
   services.k3s.clusterInit = lib.mkForce false;
   services.k3s.serverAddr = "https://192.168.0.101:6443";
@@ -27,7 +35,7 @@
     fsType = "nfs";
   };
 
-  boot.kernelPackages = pkgs."linuxPackages-cachyos-latest-x86_64-v3";
+  boot.kernelPackages = pkgs.cachyosKernels."linuxPackages-cachyos-latest-x86_64-v3";
 
   microvm = {
     hypervisor = "qemu";

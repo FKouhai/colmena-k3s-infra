@@ -59,14 +59,15 @@
         meta = {
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
+            overlays = [ nix-cachyos-kernel.overlays.default ];
           };
           specialArgs = { inherit lib; };
         };
 
         epsylon = {
           imports = [
-            ./hosts/epsylon.nix
-            ./hosts/epsylon-hardware-configuration.nix
+            microvm.nixosModules.guest
+            ./hosts/epsylon-microvm.nix
             agenix.nixosModules.default
           ];
           deployment = {
