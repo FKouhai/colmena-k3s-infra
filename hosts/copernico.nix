@@ -1,4 +1,10 @@
-{ config, lib, pkgs, agenix, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  agenix,
+  ...
+}:
 
 {
   imports = [
@@ -42,7 +48,13 @@
     };
   };
 
-  services.openssh.settings.PermitRootLogin = lib.mkForce "no";
+  services = {
+    openssh.settings.PermitRootLogin = lib.mkForce "no";
+    aphelion-agent = {
+      enable = true;
+      openFirewall = true;
+    };
+  };
 
   # common.nix already adds the ECDSA key; add the ed25519 key too so
   # either key works on this headless host.
@@ -79,7 +91,13 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.kernelPackages = pkgs.cachyosKernels."linuxPackages-cachyos-latest-x86_64-v3";
-  boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "usb_storage" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules = [
+    "ahci"
+    "xhci_pci"
+    "usb_storage"
+    "sd_mod"
+    "sr_mod"
+  ];
   boot.kernelModules = [ "kvm-amd" ];
 
   hardware.enableRedistributableFirmware = true;

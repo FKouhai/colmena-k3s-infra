@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    aphelion.url = "github:FKouhai/aphelion";
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,6 +22,7 @@
   outputs =
     {
       self,
+      aphelion,
       nixpkgs,
       agenix,
       disko,
@@ -59,7 +61,10 @@
         meta = {
           nixpkgs = import nixpkgs {
             system = "x86_64-linux";
-            overlays = [ nix-cachyos-kernel.overlays.default ];
+            overlays = [
+              aphelion.overlays.default
+              nix-cachyos-kernel.overlays.default
+            ];
           };
           specialArgs = { inherit lib agenix; };
         };
@@ -149,6 +154,7 @@
         specialArgs = { inherit agenix; };
         modules = [
           { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.default ]; }
+          aphelion.nixosModules.default
           microvm.nixosModules.host
           disko.nixosModules.disko
           ./hosts/copernico.nix
