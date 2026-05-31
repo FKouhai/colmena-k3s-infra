@@ -28,11 +28,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1780255276,
-        "narHash": "sha256-KZddbUkjppKfpOAXik+ozTWxiCHcPvlcBTlFeNZQR5I=",
+        "lastModified": 1780265886,
+        "narHash": "sha256-n9xMb03RT/x8jyBO05eVBreXPnxjKzfiXBOLWbKQfbs=",
         "owner": "FKouhai",
         "repo": "aphelion",
-        "rev": "0f84705f110af64a1d98329cdf82e917e4ba373c",
+        "rev": "8d1e2d58fb6ff04ad893aad416621dacf79d900a",
         "type": "github"
       },
       "original": {

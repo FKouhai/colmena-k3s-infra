@@ -3,6 +3,7 @@
 {
   imports = [
     ../modules/common.nix
+    ../modules/microvm-guest.nix
     ../modules/k3s-agent.nix
     agenix.nixosModules.default
   ];
