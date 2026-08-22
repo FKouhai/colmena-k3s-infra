@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    aphelion.url = "github:FKouhai/aphelion";
+    aphelion.url = "path:/home/franky/sw/go/aphelion";
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,6 +31,18 @@
     }:
     let
       lib = nixpkgs.lib;
+
+      # Imported into every microvm NixOS config — both via colmena direct
+      # deploy and via copernico's microvm.vms definitions.
+      microvmLogd = [
+        aphelion.nixosModules.aphelion-logd
+        {
+          services.aphelion-logd = {
+            enable = true;
+            openFirewall = true;
+          };
+        }
+      ];
 
       mkNode =
         {
@@ -74,7 +86,8 @@
             microvm.nixosModules.microvm
             ./hosts/epsylon-microvm.nix
             agenix.nixosModules.default
-          ];
+          ]
+          ++ microvmLogd;
           deployment = {
             targetHost = "192.168.0.106";
             targetUser = "nixos";
@@ -125,7 +138,8 @@
             microvm.nixosModules.microvm
             ./hosts/worker03-microvm.nix
             agenix.nixosModules.default
-          ];
+          ]
+          ++ microvmLogd;
           deployment = {
             targetHost = "192.168.0.104";
             targetUser = "nixos";
@@ -139,7 +153,8 @@
             microvm.nixosModules.microvm
             ./hosts/worker04-microvm.nix
             agenix.nixosModules.default
-          ];
+          ]
+          ++ microvmLogd;
           deployment = {
             targetHost = "192.168.0.105";
             targetUser = "nixos";
@@ -154,11 +169,18 @@
         specialArgs = { inherit agenix; };
         modules = [
           { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.default ]; }
-          aphelion.nixosModules.default
+          aphelion.nixosModules.aphelion-agent
           microvm.nixosModules.host
           disko.nixosModules.disko
           ./hosts/copernico.nix
           ./hosts/copernico-disk.nix
+          # Inject aphelion-logd into each VM definition so the image built
+          # by copernico also carries the daemon.
+          {
+            microvm.vms.epsylon.config.imports = microvmLogd;
+            microvm.vms.worker03.config.imports = microvmLogd;
+            microvm.vms.worker04.config.imports = microvmLogd;
+          }
         ];
       };
 
