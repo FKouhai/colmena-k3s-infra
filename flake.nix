@@ -16,7 +16,7 @@
       url = "github:astro/microvm.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/2e3d6f313f83b7eacd94467c0f693c87774872a5"; # pin to 7.1.8 for cilium #48016 — 7.2 breaks FnSetRetval probe (fixed in cilium 67c619c not yet in 1.20.1)
   };
 
   outputs =
@@ -72,7 +72,7 @@
       colmena = {
         meta = {
           nixpkgs = import nixpkgs {
-            system = "x86_64-linux";
+            localSystem = "x86_64-linux";
             overlays = [
               aphelion.overlays.default
               nix-cachyos-kernel.overlays.default
@@ -165,9 +165,9 @@
       };
 
       nixosConfigurations.copernico = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
         specialArgs = { inherit agenix; };
         modules = [
+          { nixpkgs.hostPlatform = "x86_64-linux"; }
           { nixpkgs.overlays = [ nix-cachyos-kernel.overlays.default ]; }
           aphelion.nixosModules.aphelion-agent
           microvm.nixosModules.host

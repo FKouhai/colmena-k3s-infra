@@ -32,11 +32,10 @@
   environment.etc."rancher/k3s/config.yaml.d/etcd-s3.yaml" = {
     text = ''
       etcd-s3: true
-      etcd-s3-endpoint: "192.168.0.33:9000"
+      etcd-s3-endpoint: "a9c218c248d485ff129fbbca71ea53a2.r2.cloudflarestorage.com"
       etcd-s3-bucket: "etcd-snapshots"
       etcd-s3-bucket-lookup-type: "path"
       etcd-s3-region: "auto"
-      etcd-s3-insecure: true
       etcd-s3-retention: 5
       etcd-snapshot-retention: 5
       etcd-snapshot-schedule-cron: "0 */12 * * *"

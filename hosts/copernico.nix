@@ -16,6 +16,13 @@
   # common.nix enables NetworkManager, but a hypervisor host is better served
   # by systemd-networkd for reliable bridge + tap interface management.
   networking.networkmanager.enable = lib.mkForce false;
+  networking.useNetworkd = true;
+  networking.useDHCP = false;
+  # common.nix sets defaultGateway as string; networkd requires interface specified
+  networking.defaultGateway = lib.mkForce {
+    address = "192.168.0.1";
+    interface = "br0";
+  };
   systemd.network.enable = true;
 
   systemd.network = {
@@ -90,7 +97,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.kernelPackages = pkgs.cachyosKernels."linuxPackages-cachyos-latest-x86_64-v3";
+  boot.kernelPackages = pkgs.cachyosKernels."linuxPackages-cachyos-latest";
   boot.initrd.availableKernelModules = [
     "ahci"
     "xhci_pci"

@@ -17,7 +17,9 @@
     description = "Mount persistent k3s node password directory";
     before = [ "k3s.service" ];
     wantedBy = [ "k3s.service" ];
-    after = [ "local-fs.target" ];
+    wants = [ "var.mount" ];
+    requires = [ "var.mount" ];
+    after = [ "local-fs.target" "var.mount" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -42,8 +44,8 @@
   };
 
   systemd.services.k3s = {
-    after = [ "network-online.target" "var.mount" ];
+    after = [ "network-online.target" "var.mount" "k3s-node-passwd-mount.service" ];
     wants = [ "network-online.target" ];
-    requires = [ "var.mount" ];
+    requires = [ "var.mount" "k3s-node-passwd-mount.service" ];
   };
 }
