@@ -172,6 +172,7 @@
           aphelion.nixosModules.aphelion-agent
           microvm.nixosModules.host
           disko.nixosModules.disko
+          agenix.nixosModules.default
           ./hosts/copernico.nix
           ./hosts/copernico-disk.nix
           # Inject aphelion-logd into each VM definition so the image built

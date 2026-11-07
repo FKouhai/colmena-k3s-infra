@@ -9,6 +9,7 @@
 {
   imports = [
     ../modules/common.nix
+    ../modules/postgresql.nix
   ];
 
   networking.hostName = "copernico";

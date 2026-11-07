@@ -6,6 +6,7 @@ let
   worker04 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2rton5QkrU9wsqod0IXWxxEU+PXZwLazRj6kOuZtC9";
   worker05 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ5PUBhb0OUgUsuEehNr3i+rblWBHtkkv3X0BXsDPXNn root@nixos";
   franky = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFyWsnvAIM23SRQCW4AIPKeNhVeCWtez/CV1hDegCunC";
+  copernico = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINmlQTkbekyaFdhbzPVIEGOu1TjHj96xhiQUzhD7vFEP root@copernico";
 in
 {
   "k3s-s3-creds.yaml.age".publicKeys = [
@@ -21,5 +22,11 @@ in
     worker02
     worker03
     worker04
+  ];
+  # Shared postgres password for all DBs hosted on copernico.
+  # Rekey after editing recipients: `agenix -r`
+  "psql-password.age".publicKeys = [
+    copernico
+    franky
   ];
 }
