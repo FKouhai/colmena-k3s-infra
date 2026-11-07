@@ -4,7 +4,7 @@
   imports = [
     ../modules/common.nix
     ../modules/microvm-guest.nix
-    ../modules/k3s-server.nix
+    ../modules/k3s-agent.nix
     agenix.nixosModules.default
   ];
 
@@ -18,9 +18,7 @@
     interface = "eth0";
   };
 
-  # Join the existing cluster on worker05 rather than bootstrapping a new one
-  services.k3s.clusterInit = lib.mkForce false;
-  services.k3s.serverAddr = "https://192.168.0.101:6443";
+  # Agent now: joins worker05 (.101) via the shared k3s-agent module.
 
   # microvm.nix uses eth0 for the first virtio-net interface
   networking.interfaces.eth0.useDHCP = false;

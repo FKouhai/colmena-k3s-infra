@@ -18,6 +18,6 @@
     enable = true;
     role = "agent";
     tokenFile = config.age.secrets.cluster-token.path;
-    serverAddr = "https://192.168.0.106:6443";
+    serverAddr = "https://192.168.0.101:6443";
   };
 }

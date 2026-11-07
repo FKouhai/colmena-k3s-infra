@@ -22,9 +22,8 @@
     }
   ];
 
-  # Join the existing cluster rather than bootstrapping a new one
-  services.k3s.clusterInit = lib.mkForce false;
-  services.k3s.serverAddr = "https://192.168.0.106:6443";
+  # Sole surviving server: module defaults are the shape we want
+  # (clusterInit is a no-op on already-initialized etcd, no join address).
 
   system.stateVersion = "24.11";
 }
