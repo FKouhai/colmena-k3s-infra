@@ -65,9 +65,17 @@
   # Client tools on PATH for manual maintenance (dumps, psql).
   environment.systemPackages = [ config.services.postgresql.package ];
 
+  # postgres_exporter for Prometheus. Runs as the postgres OS user with
+  # peer auth, so no password in config. Scraped as 192.168.0.19:9187.
+  services.prometheus.exporters.postgres = {
+    enable = true;
+    port = 9187;
+    runAsLocalSuperUser = true;
+  };
+
   # Pods reach .19 over the LAN bridge. (tailscale0 is a trusted interface,
   # so tailnet peers can also reach it — authenticated mesh, acceptable.)
-  networking.firewall.interfaces.br0.allowedTCPPorts = [ 5432 ];
+  networking.firewall.interfaces.br0.allowedTCPPorts = [ 5432 9187 ];
 
   # Nightly compressed dumps of every hosted DB, 7-day local retention.
   # Follow-up: ship these to R2 (separate postgres-dumps bucket).
