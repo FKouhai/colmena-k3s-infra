@@ -30,8 +30,6 @@
     initialScript = pkgs.writeText "copernico-init.sql" ''
       \set pw `cat ${config.age.secrets.psql-password.path}`
       ALTER ROLE postgres WITH PASSWORD :'pw';
-      SELECT 'CREATE DATABASE "authentik" OWNER postgres'
-      WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'authentik')\gexec
       SELECT 'CREATE DATABASE "atuin" OWNER postgres'
       WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'atuin')\gexec
       SELECT 'CREATE DATABASE "grafana" OWNER postgres'
@@ -50,6 +48,12 @@
       WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'prowlarr_main')\gexec
       SELECT 'CREATE DATABASE "prowlarr_log" OWNER postgres'
       WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'prowlarr_log')\gexec
+      SELECT 'CREATE DATABASE "pocketid" OWNER postgres'
+      WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'pocketid')\gexec
+      SELECT 'CREATE DATABASE "gitea" OWNER postgres'
+      WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'gitea')\gexec
+      SELECT 'CREATE DATABASE "homarr" OWNER postgres'
+      WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'homarr')\gexec
     '';
     # NOTE: pods reach .19 SNAT'd to their node's LAN IP (Cilium BPF
     # masquerades everything outside 10.42.0.0/16), so Postgres sees
@@ -87,7 +91,7 @@
     };
     script = ''
       mkdir -p /var/backup/postgresql
-      for db in authentik atuin grafana openbao sonarr_main sonarr_log radarr_main radarr_log prowlarr_main prowlarr_log; do
+      for db in atuin grafana openbao sonarr_main sonarr_log radarr_main radarr_log prowlarr_main prowlarr_log pocketid gitea homarr; do
         ${config.services.postgresql.package}/bin/pg_dump "$db" \
           | ${pkgs.zstd}/bin/zstd -o /var/backup/postgresql/"$db"-$(date +%F).sql.zst
       done

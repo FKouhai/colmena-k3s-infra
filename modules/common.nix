@@ -47,6 +47,7 @@
         6443 # k3s supervisor; k8s API
         7946 # MetalLB
         9100 # Prometheus Node Exporter
+        2112 # Tetragon agent metrics
         9962 # cilium-agent metrics
         9963 # cilium-operator metrics
         10250 # kubelet metrics
