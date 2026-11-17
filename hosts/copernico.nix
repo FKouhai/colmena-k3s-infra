@@ -10,6 +10,8 @@
   imports = [
     ../modules/common.nix
     ../modules/postgresql.nix
+    ../modules/caddy.nix
+    ../modules/seaweed.nix
   ];
 
   networking.hostName = "copernico";
