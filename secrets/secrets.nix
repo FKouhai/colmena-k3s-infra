@@ -29,4 +29,12 @@ in
     copernico
     franky
   ];
+  "caddy-env.age".publicKeys = [
+    copernico
+    franky
+  ];
+  "seaweed-s3-env.age".publicKeys = [
+    copernico
+    franky
+  ];
 }
