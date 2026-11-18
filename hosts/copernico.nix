@@ -12,6 +12,8 @@
     ../modules/postgresql.nix
     ../modules/caddy.nix
     ../modules/seaweed.nix
+    ../modules/alloy.nix
+    ../modules/node-exporter.nix
   ];
 
   networking.hostName = "copernico";
